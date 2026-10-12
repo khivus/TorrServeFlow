@@ -11,7 +11,7 @@
     <string name="exit_text">Локалният TorrServer ще бъде спрян при Изход, ако Услуга за достъпност не е разрешена.</string>
     <string name="remove_all_warn">Искате ли да изтриете всички торенти?</string>
     <string name="share">Сподели</string>
-    <string name="open_torrserve">Отвори TorrServe</string>
+    <string name="open_torrserve">Отвори TorrServe Flow</string>
     <string name="open_with">Отваряне с</string>
     <string name="show_menu">Покажи Главно меню</string>
     <string name="torrents">Торенти</string>
@@ -218,7 +218,7 @@
     <string name="accessibility_manual_off">Деактивирайте услугата %1$s в секцията Предпочитания на устройството / Достъпност</string>
     <string name="accessibility_service_description">Активирането на тази услуга може да предотврати изключване на локалният TorrServer от операционната система</string>
     <string name="switch_accessibility_title">Услуга за достъпност</string>
-    <string name="switch_accessibility_summary_on">Натиснете, за да деактивирате услугата TorrServe</string>
+    <string name="switch_accessibility_summary_on">Натиснете, за да деактивирате услугата TorrServe Flow</string>
     <string name="stat_string_added">Добавен торент</string>
     <string name="stat_string_info">Получаване на информация за торент</string>
     <string name="stat_string_preload">Предварително зареждане на торент</string>

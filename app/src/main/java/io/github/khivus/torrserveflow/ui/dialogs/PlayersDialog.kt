@@ -1,0 +1,65 @@
+package io.github.khivus.torrserveflow.ui.dialogs
+
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.os.Build
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.net.toUri
+import io.github.khivus.torrserveflow.R
+import io.github.khivus.torrserveflow.app.App
+import io.github.khivus.torrserveflow.app.Consts.PLAYERS_BLACKLIST
+import io.github.khivus.torrserveflow.server.models.torrent.Torrent
+import io.github.khivus.torrserveflow.settings.Settings
+import io.github.khivus.torrserveflow.utils.Mime
+import io.github.khivus.torrserveflow.utils.TorrentHelper
+import java.util.Locale
+
+object PlayersDialog {
+    fun show(context: Context, torrent: Torrent, index: Int, onSelect: (player: String) -> Unit) {
+        val file = TorrentHelper.findFile(torrent, index) ?: throw Exception("file in torrent not found")
+        val link = TorrentHelper.getTorrentPlayLink(torrent, index)
+        val mime = Mime.getMimeType(file.path)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(link.toUri(), mime)
+
+        val resInfo =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                App.context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL)
+            } else {
+                App.context.packageManager.queryIntentActivities(intent, 0)
+            } // PackageManager.MATCH_DEFAULT_ONLY
+
+        val filteredList: MutableList<ResolveInfo> = mutableListOf()
+        for (info in resInfo) {
+            if (!PLAYERS_BLACKLIST.contains(info.activityInfo.packageName.lowercase(Locale.getDefault()))) {
+                filteredList.add(info)
+            }
+        }
+
+        if (filteredList.isEmpty()) {
+            App.toast(R.string.error_app_not_found, false)
+            return
+        }
+
+        val listAdapter = AppListAdapter(context, filteredList)
+        val builder = AlertDialog.Builder(context)
+        val appTitleView = LayoutInflater.from(context).inflate(R.layout.app_list_title, null)
+        val switch = appTitleView.findViewById<SwitchCompat>(R.id.useDefault)
+
+        builder.setCustomTitle(appTitleView)
+        builder.setAdapter(listAdapter) { dlg, which ->
+            val setDefaultPlayer = switch.isChecked
+            val selectedPlayer = listAdapter.getItemPackage(which)
+            onSelect(selectedPlayer)
+            if (setDefaultPlayer) Settings.setPlayer(selectedPlayer)
+            dlg.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+        dialog.listView.requestFocus()
+    }
+}

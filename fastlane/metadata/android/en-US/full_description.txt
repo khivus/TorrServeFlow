@@ -1,3 +1,5 @@
+TorrServe Flow is a fork of TorrServe MatriX with clearer navigation, an in-app playlist, and full-screen torrent file browsing.
+
 Download torrent files.
 
 Application for downloading torrents as HTTP files.

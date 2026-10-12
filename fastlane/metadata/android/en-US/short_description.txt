@@ -1,1 +1,1 @@
-Download torrent files
+TorrServe client with clearer navigation and full-screen torrent browsing

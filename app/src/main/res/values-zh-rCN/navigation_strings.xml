@@ -1,0 +1,12 @@
+<resources>
+    <string name="servers">服务器</string>
+    <string name="close_menu">关闭菜单</string>
+    <string name="navigate_back">返回</string>
+    <string name="torrent_files">种子文件</string>
+    <string name="torrent_details">种子详情</string>
+    <string name="playlist_empty">播放列表中没有可播放的文件</string>
+    <string name="playlist_loading">正在加载播放列表…</string>
+    <string name="playlist_error">无法加载播放列表。请检查服务器连接并重试。</string>
+    <string name="retry">重试</string>
+    <string name="playlist_description">选择文件或播放整个播放列表。</string>
+</resources>

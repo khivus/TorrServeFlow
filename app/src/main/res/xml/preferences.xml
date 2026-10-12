@@ -100,13 +100,6 @@
         app:title="@string/sort_torrents_list_title" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:summaryOff="@string/show_fab_sum_off"
-        android:summaryOn="@string/show_fab_sum_on"
-        app:key="show_fab"
-        app:title="@string/show_fab_title" />
-
-    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:summaryOff="@string/show_sort_fab_sum_off"
         android:summaryOn="@string/show_sort_fab_sum_on"

@@ -1,0 +1,85 @@
+package io.github.khivus.torrserveflow.ui.activities.main
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import io.github.khivus.torrserveflow.R
+import io.github.khivus.torrserveflow.app.App
+import io.github.khivus.torrserveflow.server.api.Api
+import io.github.khivus.torrserveflow.settings.Settings
+
+class StatusViewModel : ViewModel() {
+    private var isWork = Any()
+    private var isWorkHost = Any()
+    var data: MutableLiveData<String>? = null
+    var host: MutableLiveData<String>? = null
+
+    fun get(): LiveData<String> {
+        if (data == null) {
+            data = MutableLiveData()
+            update()
+        }
+        return data!!
+    }
+
+    fun getHost(): LiveData<String> {
+        if (host == null) {
+            host = MutableLiveData()
+            updateHost()
+        }
+        return host!!
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        isWork = false
+        isWorkHost = false
+    }
+
+    private fun update() {
+        viewModelScope.launch(Dispatchers.IO) {
+            synchronized(isWork) {
+                if (isWork == true)
+                    return@launch
+            }
+            isWork = true
+            while (isWork == true) {
+                try {
+                    var st = Api.echo()
+                    val old = data?.value
+
+                    if (st.isEmpty())
+                        st = App.context.getString(R.string.server_not_responding)
+
+                    if (old == null || st != old)
+                        withContext(Dispatchers.Main) { data?.value = st }
+                    delay(1000)
+                } catch (e: Exception) {
+                    delay(2000)
+                }
+            }
+        }
+    }
+
+    private fun updateHost() {
+        viewModelScope.launch(Dispatchers.Main) {
+            synchronized(isWorkHost) {
+                if (isWorkHost == true)
+                    return@launch
+            }
+            isWorkHost = true
+            while (isWorkHost == true) {
+                val sv = Settings.getHost()
+                val old = host?.value
+                if (old == null || sv != old)
+                    host?.value = sv
+                delay(1000)
+            }
+        }
+    }
+}

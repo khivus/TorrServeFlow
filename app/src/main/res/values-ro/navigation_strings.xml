@@ -1,0 +1,12 @@
+<resources>
+    <string name="servers">Servere</string>
+    <string name="close_menu">Închide meniul</string>
+    <string name="navigate_back">Înapoi</string>
+    <string name="torrent_files">Fișierele torrentului</string>
+    <string name="torrent_details">Detaliile torrentului</string>
+    <string name="playlist_empty">Nu există fișiere de redat în playlist</string>
+    <string name="playlist_loading">Se încarcă playlistul…</string>
+    <string name="playlist_error">Playlistul nu a putut fi încărcat. Verifică conexiunea la server și încearcă din nou.</string>
+    <string name="retry">Încearcă din nou</string>
+    <string name="playlist_description">Alege un fișier sau redă întregul playlist.</string>
+</resources>

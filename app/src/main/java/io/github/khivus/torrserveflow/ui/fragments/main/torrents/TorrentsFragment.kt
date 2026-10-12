@@ -1,0 +1,176 @@
+package io.github.khivus.torrserveflow.ui.fragments.main.torrents
+
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Bundle
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ListView
+import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import io.github.khivus.torrserveflow.R
+import io.github.khivus.torrserveflow.app.App
+import io.github.khivus.torrserveflow.atv.Utils
+import io.github.khivus.torrserveflow.server.models.torrent.Torrent
+import io.github.khivus.torrserveflow.settings.Settings
+import io.github.khivus.torrserveflow.ui.activities.play.PlayActivity
+import io.github.khivus.torrserveflow.ui.fragments.TSFragment
+import io.github.khivus.torrserveflow.utils.TorrentHelper
+
+
+class TorrentsFragment : TSFragment() {
+
+    private var torrentAdapter: TorrentsAdapter? = null
+    private lateinit var emptyView: TextView
+    private var sortMode: Boolean = Settings.sortTorrByTitle
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val vi = inflater.inflate(R.layout.main_fragment, container, false)
+        torrentAdapter = TorrentsAdapter(requireActivity())
+        emptyView = vi.findViewById(R.id.empty_view)
+        vi.findViewById<ListView>(R.id.lvTorrents)?.let { lvTorrents ->
+            lvTorrents.adapter = torrentAdapter
+            lvTorrents.setOnItemClickListener { _, _, i, _ ->
+                val torr = torrentAdapter?.getItem(i) as Torrent
+                val intent = Intent(requireContext(), PlayActivity::class.java)
+                intent.action = Intent.ACTION_VIEW
+                intent.putExtra("hash", torr.hash)
+                intent.putExtra("title", torr.title)
+                torr.category?.let { if (it.isNotBlank()) intent.putExtra("category", it) }
+                intent.putExtra("poster", torr.poster)
+                intent.putExtra("action", "browse")
+                startActivity(intent)
+            }
+            lvTorrents.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
+            lvTorrents.setMultiChoiceModeListener(TorrentsActionBar(lvTorrents))
+        }
+        return vi
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            start()
+
+            val category =
+                arguments?.getString("category") ?: ""
+
+            if (category.isNotEmpty()) {
+                filter(category)
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isViewModelInitialized())
+            (viewModel as TorrentsViewModel).setUpdate(false)
+    }
+
+    fun sort(mode: Boolean = sortMode) {
+        val list = torrentAdapter!!.list
+        if (list.size > 0) {
+            when (mode) {
+                false -> {
+                    torrentAdapter?.update(list.sortedBy { it.title })
+                    App.toast(R.string.sort_by_name)
+                }
+
+                true -> {
+                    torrentAdapter?.update(list.sortedByDescending { it.timestamp })
+                    App.toast(R.string.sort_by_date)
+                }
+            }
+            sortMode = !mode
+            Settings.set("sort_torrents", sortMode)
+            activity?.findViewById<ListView>(R.id.lvTorrents)?.apply {
+                this.setSelection(0)
+                requestFocus()
+            }
+        }
+    }
+
+    suspend fun filter(cat: String = "") = withContext(Dispatchers.Main) {
+        val data = (viewModel as TorrentsViewModel).getData()
+        data.observe(viewLifecycleOwner) { list ->
+            val fltList = if (cat == "uncategorized")
+                list.filter { it.category.isNullOrBlank() }
+            else if (cat.isNotBlank())
+                list.filter { it.category?.contains(cat, true) == true }
+            else
+                list
+            torrentAdapter?.update(fltList)
+            if (fltList.isEmpty()) {
+                emptyView.visibility = View.VISIBLE
+            } else {
+                emptyView.visibility = View.GONE
+            }
+        }
+    }
+
+    suspend fun start() = withContext(Dispatchers.Main) {
+        viewModel = ViewModelProvider(this@TorrentsFragment)[TorrentsViewModel::class.java]
+        val data = (viewModel as TorrentsViewModel).getData()
+        (viewModel as TorrentsViewModel).setUpdate(true)
+        data.observe(viewLifecycleOwner) {
+            torrentAdapter?.update(it)
+            if (it.isEmpty()) {
+                emptyView.visibility = View.VISIBLE
+            } else {
+                emptyView.visibility = View.GONE
+            }
+        }
+    }
+
+    fun onKeyUp(keyCode: Int): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_INFO,
+            KeyEvent.KEYCODE_MENU,
+            KeyEvent.KEYCODE_BUTTON_X -> {
+                return true
+            }
+        }
+        return false
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun onKeyDown(keyCode: Int): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_INFO -> {
+                activity?.currentFocus?.let {
+                    it.findViewById<ListView>(R.id.lvTorrents)?.let { lv ->
+                        val itemPosition = lv.selectedItemPosition
+                        if (itemPosition in torrentAdapter!!.list.indices) {
+                            torrentAdapter!!.list[itemPosition].let {
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    val torrent = TorrentHelper.waitFiles(it.hash) ?: let {
+                                        return@launch
+                                    }
+                                    TorrentHelper.showFFPInfo(lv.context, "", torrent)
+                                }
+                            }
+                        }
+                    }
+                }
+                return true
+            }
+
+            KeyEvent.KEYCODE_MENU,
+            KeyEvent.KEYCODE_BUTTON_X -> {
+                sort(sortMode)
+                if (Utils.isTvBox()) return true
+            }
+
+        }
+        return false
+    }
+}

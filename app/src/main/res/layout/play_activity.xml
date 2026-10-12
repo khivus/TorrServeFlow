@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activities.play.PlayActivity">
+
+    <include layout="@layout/app_toolbar" />
 
     <ImageView
         android:id="@+id/ivAd"
@@ -23,17 +25,6 @@
         android:paddingRight="5dp"
         android:scaleType="fitCenter"
         android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/info_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:alpha="1.0"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="?attr/colorPrimary" />
 
     <FrameLayout
         android:id="@+id/info_container"
@@ -61,7 +52,8 @@
     <FrameLayout
         android:id="@+id/bottom_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:minHeight="6dp" />
 
 </LinearLayout>

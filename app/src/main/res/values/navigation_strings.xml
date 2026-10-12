@@ -1,0 +1,12 @@
+<resources>
+    <string name="servers">Servers</string>
+    <string name="close_menu">Close menu</string>
+    <string name="navigate_back">Back</string>
+    <string name="torrent_files">Torrent files</string>
+    <string name="torrent_details">Torrent details</string>
+    <string name="playlist_empty">No playable files in the playlist</string>
+    <string name="playlist_loading">Loading playlist…</string>
+    <string name="playlist_error">Could not load the playlist. Check your server connection and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="playlist_description">Choose a file to play, or play the entire playlist.</string>
+</resources>

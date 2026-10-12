@@ -1,0 +1,12 @@
+<resources>
+    <string name="servers">Сервери</string>
+    <string name="close_menu">Закрити меню</string>
+    <string name="navigate_back">Назад</string>
+    <string name="torrent_files">Файли торрента</string>
+    <string name="torrent_details">Відомості про торрент</string>
+    <string name="playlist_empty">У плейлісті немає файлів для відтворення</string>
+    <string name="playlist_loading">Завантаження плейліста…</string>
+    <string name="playlist_error">Не вдалося завантажити плейліст. Перевірте підключення до сервера та спробуйте ще раз.</string>
+    <string name="retry">Повторити</string>
+    <string name="playlist_description">Виберіть файл або запустіть увесь плейліст.</string>
+</resources>

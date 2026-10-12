@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-condensed"
             android:maxLines="3"
             android:singleLine="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -49,13 +48,13 @@
 
             <TextView
                 android:id="@+id/tvTorrHash"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:ellipsize="middle"
-                android:fontFamily="sans-serif-condensed"
-                android:singleLine="false"
+                android:singleLine="true"
+                android:textSize="12sp"
                 tools:text="hash" />
 
             <LinearLayout
@@ -70,12 +69,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:fontFamily="sans-serif-condensed"
                     android:paddingStart="3dp"
                     android:paddingLeft="3dp"
                     android:singleLine="true"
-                    android:textColor="?attr/colorHost"
-                    android:textSize="22sp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="14sp"
                     tools:text="5GB" />
 
                 <TextView
@@ -86,6 +84,7 @@
                     android:paddingStart="3dp"
                     android:paddingLeft="3dp"
                     android:singleLine="true"
+                    android:textSize="12sp"
                     tools:text="10.10.2001" />
 
             </LinearLayout>

@@ -5,11 +5,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/gradient_divider_hw" /-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/twotone_folder_16"
+            app:tint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tvTorrentFilesTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +41,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlaylist"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginLeft="6dp"
@@ -41,7 +63,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlaylistContinue"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:layout_marginLeft="3dp"
@@ -65,10 +87,12 @@
     <ListView
         android:id="@+id/lvTorrentFiles"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="50dp"
-        android:listSelector="@drawable/action_selector"
-        android:requiresFadingEdge="vertical" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="?attr/colorControlHighlight"
+        android:dividerHeight="1dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:listSelector="@drawable/action_selector" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@
     <string name="exit_text">Локальний TorrServer буде зупинено під час виходу, якщо службу доступності не ввімкнено.</string>
     <string name="remove_all_warn">Ви хочете видалити всі торренти?</string>
     <string name="share">Поділитись</string>
-    <string name="open_torrserve">Відкрити TorrServe</string>
+    <string name="open_torrserve">Відкрити TorrServe Flow</string>
     <string name="open_with">Відкрити за допомогою</string>
     <string name="show_menu">Показати головне меню</string>
     <string name="torrents">Торренти</string>
@@ -209,7 +209,7 @@
     <string name="accessibility_manual_off">Вимкнути службу «%1$s» в розділі «Параметри пристрою» / «Спеціальні можливості»</string>
     <string name="accessibility_service_description">Включення цього сервісу може запобігти завершення локального TorrServer системою</string>
     <string name="switch_accessibility_title">Сервіс спеціальних можливостей</string>
-    <string name="switch_accessibility_summary_on">Натисніть для відключення сервісу TorrServe</string>
+    <string name="switch_accessibility_summary_on">Натисніть для відключення сервісу TorrServe Flow</string>
     <string name="stat_string_added">Торрент додано</string>
     <string name="stat_string_info">Отримання інформації</string>
     <string name="stat_string_preload">Попереднє завантаження</string>

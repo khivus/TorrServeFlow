@@ -8,11 +8,10 @@
         android:id="@+id/lvTorrents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/gradient_divider_green"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="84dp"
-        android:listSelector="@drawable/action_selector"
-        android:requiresFadingEdge="vertical" />
+        android:divider="@android:color/transparent"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        android:listSelector="@drawable/action_selector" />
 
     <TextView
         android:id="@+id/empty_view"

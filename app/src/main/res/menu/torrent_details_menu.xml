@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionTorrentDetails"
+        android:icon="@drawable/outline_info_24"
+        android:title="@string/torrent_details"
+        android:checkable="true"
+        app:showAsAction="ifRoom" />
+</menu>

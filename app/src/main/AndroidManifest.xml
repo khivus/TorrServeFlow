@@ -50,7 +50,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TorrServe.DayNight">
         <activity
-            android:name="ru.yourok.torrserve.ui.activities.main.MainActivity"
+            android:name="io.github.khivus.torrserveflow.ui.activities.main.MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:launchMode="singleInstance">
@@ -76,11 +76,11 @@
         </activity>
 
         <activity
-            android:name="ru.yourok.torrserve.ui.activities.play.PlayActivity"
+            android:name="io.github.khivus.torrserveflow.ui.activities.play.PlayActivity"
             android:configChanges="uiMode"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:theme="@style/PlayDialog.DayNight">
+            android:theme="@style/Theme.TorrServe.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -220,7 +220,7 @@
         </activity>
 
         <activity
-            android:name="ru.yourok.torrserve.ui.activities.main.SettingsActivity"
+            android:name="io.github.khivus.torrserveflow.ui.activities.main.SettingsActivity"
             android:configChanges="uiMode"
             android:exported="true">
             <intent-filter>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">TorrServe MatriX</string>
+    <string name="app_name" translatable="false">TorrServe Flow</string>
 
     <string name="add">Add</string>
     <string name="rutor" translatable="false">RuTor</string>
@@ -17,7 +17,7 @@
     <string name="remove_all_warn">Do you want to delete all torrents?</string>
     <string name="share">Share</string>
 
-    <string name="open_torrserve">Open TorrServe</string>
+    <string name="open_torrserve">Open TorrServe Flow</string>
     <string name="open_with">Open With</string>
     <string name="show_menu">Show Main Menu</string>
     <string name="torrents">Torrents</string>
@@ -269,7 +269,7 @@
     <string name="accessibility_manual_off">Disable service %1$s in Device Preferences / Accessibility section</string>
     <string name="accessibility_service_description">Enabling this service can prevent local TorrServer shutdown by OS</string>
     <string name="switch_accessibility_title">Accessibility Service</string>
-    <string name="switch_accessibility_summary_on">Press to disable TorrServe service</string>
+    <string name="switch_accessibility_summary_on">Press to disable TorrServe Flow service</string>
 
     <string name="switch_disable_accessibility_on_server_switch_title">Disable Accessibility Service on server switch</string>
     <string name="switch_disable_accessibility_on_server_switch_summary_on">Accessibility Service will be disabled when switching from local to remote server</string>
