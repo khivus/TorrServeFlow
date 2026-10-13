@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">Local server: %1$s · %2$s</string>
+    <string name="playback_remote_server">Remote server: %1$s · %2$s</string>
+    <string name="playback_server_connected">Connected</string>
+    <string name="playback_server_unreachable">Unreachable</string>
+    <string name="playback_server_checking">Checking connection</string>
+    <string name="playback_app_loading">App: Loading torrent files</string>
+    <string name="playback_app_browsing">App: Waiting for a file selection</string>
+    <string name="playback_app_preparing">App: Preparing playback</string>
+    <string name="playback_app_choosing">App: Waiting for a player selection</string>
+    <string name="playback_app_opening">App: Opening your player</string>
+    <string name="playback_app_opened">App: Playback opened in your player</string>
+    <string name="playback_app_returned">App: Returned from player · Continue opens playback again</string>
+    <string name="playback_app_error">App: Could not open playback</string>
+    <string name="playback_status_checking">Checking torrent and cache</string>
+    <string name="playback_status_unavailable">Torrent status unavailable</string>
+    <string name="playback_status_added">Torrent queued</string>
+    <string name="playback_status_getting_info">Getting file information</string>
+    <string name="playback_status_buffering">Buffering before playback</string>
+    <string name="playback_status_stream_connected">Media stream connected</string>
+    <string name="playback_status_cache_waiting">Cached data waiting for playback</string>
+    <string name="playback_status_cache_available">Torrent active · Cached data available</string>
+    <string name="playback_status_downloading">Downloading torrent data</string>
+    <string name="playback_status_no_buffer">Torrent active · No buffered data</string>
+    <string name="playback_status_inactive">Torrent inactive · Buffering needed</string>
+    <string name="playback_status_unknown">Torrent state unknown</string>
+    <string name="playback_cache_unknown">Cache status: Unavailable</string>
+    <string name="playback_cache_bytes">Cached data: %1$s</string>
+    <string name="playback_cache_capacity">Cached data: %1$s / %2$s</string>
+    <string name="playback_streams">Stream connections: %1$s</string>
+    <string name="playback_not_reported">Not reported</string>
+    <string name="playback_preload_progress">Starting buffer: %1$s / %2$s</string>
+    <string name="playback_hint_checking">Refreshing the server state and checking whether cached data remains.</string>
+    <string name="playback_hint_cached">Cached data remains. Continue reopens your player; the saved position may still need buffering.</string>
+    <string name="playback_hint_stream">A media stream is connected. Download speed can be zero while cached data is being used.</string>
+    <string name="playback_hint_buffering">The server is downloading data for playback. Wait for the starting buffer or open Continue in your player.</string>
+    <string name="playback_hint_no_buffer">There is no active buffer. Continue opens your player and downloads the needed data again.</string>
+    <string name="playback_hint_metadata">Waiting for torrent file information from peers.</string>
+    <string name="playback_hint_unknown">The server has not reported a recognized torrent state.</string>
+</resources>

@@ -9,11 +9,14 @@ The new package installs separately from the original TorrServe app; settings an
 ## What this fork changes
 
 - Moves the main-menu button to the top-left corner and keeps it visible. The top bar displays the active page name.
+- Opens the side menu with a rightward swipe across the page, alongside the standard left-edge drag and menu button.
 - Adds explicit **Torrents**, **Servers**, and **TorrServer Settings** menu entries, replacing the hidden navigation actions on the server header.
 - Opens **Playlist** as an in-app list of playable files. Playback starts only when a file or **Play All** is selected.
 - Opens torrent contents as a full-screen file browser with a Back button, instead of a popup. Even single-file torrents open for browsing before playback.
 - Shows the torrent name once above the file list and emphasizes distinct episode or filename labels. Separate subfolders remain visible when needed to distinguish files.
-- Keeps the torrent file browser open when returning from an external player. Torrent information can be shown or hidden with the details button.
+- Keeps the torrent file browser open when returning from an external player. The details button remembers whether torrent information is shown or hidden.
+- Shows the current app action, server connection, cached data, and stream connections in torrent details, distinguishing retained cache from an inactive torrent that needs buffering.
+- Uses the selected player consistently for individual files, Continue, Play All, and entries in the main Playlist page.
 - Uses consistent menu styling, highlights the active destination, compacts torrent metadata, and keeps navigation consistent in portrait and landscape.
 
 ## AI disclosure

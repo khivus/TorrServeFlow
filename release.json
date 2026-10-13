@@ -1,7 +1,7 @@
 {
   "Name": "TorrServe Flow",
-  "Version": "Flow.143.Client",
-  "VersionCode": "143",
-  "BuildDate": "12.10.2026",
-  "Link": ""
+  "Version": "Flow.144.Client",
+  "VersionCode": "144",
+  "BuildDate": "13.10.2026",
+  "Link": "https://github.com/khivus/TorrServeFlow/releases/download/Flow.144.Client/TorrServeFlow.apk"
 }

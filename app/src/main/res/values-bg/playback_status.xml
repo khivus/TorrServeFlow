@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">Локален сървър: %1$s · %2$s</string>
+    <string name="playback_remote_server">Отдалечен сървър: %1$s · %2$s</string>
+    <string name="playback_server_connected">Свързан</string>
+    <string name="playback_server_unreachable">Недостъпен</string>
+    <string name="playback_server_checking">Проверка на връзката</string>
+    <string name="playback_app_loading">Приложение: зареждане на файловете</string>
+    <string name="playback_app_browsing">Приложение: изчакване на избор на файл</string>
+    <string name="playback_app_preparing">Приложение: подготовка на възпроизвеждането</string>
+    <string name="playback_app_choosing">Приложение: изчакване на избор на плейър</string>
+    <string name="playback_app_opening">Приложение: отваряне на плейъра</string>
+    <string name="playback_app_opened">Приложение: възпроизвеждането е отворено в плейъра</string>
+    <string name="playback_app_returned">Приложение: връщане от плейъра · «Продължи» отваря възпроизвеждането отново</string>
+    <string name="playback_app_error">Приложение: възпроизвеждането не може да се отвори</string>
+    <string name="playback_status_checking">Проверка на торента и кеша</string>
+    <string name="playback_status_unavailable">Състоянието на торента е недостъпно</string>
+    <string name="playback_status_added">Торентът е в опашката</string>
+    <string name="playback_status_getting_info">Получаване на информация за файловете</string>
+    <string name="playback_status_buffering">Буфериране преди възпроизвеждане</string>
+    <string name="playback_status_stream_connected">Медийният поток е свързан</string>
+    <string name="playback_status_cache_waiting">Кешираните данни изчакват възпроизвеждане</string>
+    <string name="playback_status_cache_available">Торентът е активен · Има кеширани данни</string>
+    <string name="playback_status_downloading">Изтегляне на данни от торента</string>
+    <string name="playback_status_no_buffer">Торентът е активен · Буферът е празен</string>
+    <string name="playback_status_inactive">Торентът е неактивен · Нужно е буфериране</string>
+    <string name="playback_status_unknown">Неизвестно състояние на торента</string>
+    <string name="playback_cache_unknown">Състояние на кеша: недостъпно</string>
+    <string name="playback_cache_bytes">Кеширани данни: %1$s</string>
+    <string name="playback_cache_capacity">Кеширани данни: %1$s / %2$s</string>
+    <string name="playback_streams">Връзки за поточно предаване: %1$s</string>
+    <string name="playback_not_reported">Няма данни</string>
+    <string name="playback_preload_progress">Начален буфер: %1$s / %2$s</string>
+    <string name="playback_hint_checking">Обновяване на състоянието на сървъра и проверка за останали кеширани данни.</string>
+    <string name="playback_hint_cached">Кешираните данни остават. «Продължи» отваря плейъра; запазената позиция може да изисква буфериране.</string>
+    <string name="playback_hint_stream">Медийният поток е свързан. Скоростта на изтегляне може да е нула, докато се използват кеширани данни.</string>
+    <string name="playback_hint_buffering">Сървърът изтегля данни за възпроизвеждане. Изчакайте началния буфер или натиснете «Продължи».</string>
+    <string name="playback_hint_no_buffer">Няма активен буфер. «Продължи» отваря плейъра и изтегля нужните данни отново.</string>
+    <string name="playback_hint_metadata">Изчакване на информация за файловете от пиърите.</string>
+    <string name="playback_hint_unknown">Сървърът не е съобщил разпознаваемо състояние на торента.</string>
+</resources>

@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import io.github.khivus.torrserveflow.BuildConfig
 import io.github.khivus.torrserveflow.server.models.ffp.FFPModel
 import io.github.khivus.torrserveflow.server.models.torrent.Torrent
+import io.github.khivus.torrserveflow.server.models.torrent.TorrentCache
 import io.github.khivus.torrserveflow.server.models.torrent.TorrentDetails
 import io.github.khivus.torrserveflow.settings.BTSets
 import io.github.khivus.torrserveflow.settings.Settings
@@ -64,6 +65,11 @@ object Api {
         val req = TorrentReq("get", hash).toString()
         val resp = postJson(host, req)
         return Gson().fromJson(resp, Torrent::class.java)
+    }
+
+    fun getTorrentCache(hash: String): TorrentCache? {
+        val resp = postJson(Net.getHostUrl("/cache"), CacheReq(hash).toString())
+        return Gson().fromJson(resp, TorrentCache::class.java)?.takeIf { it.hash == hash }
     }
 
     fun remTorrent(hash: String) {

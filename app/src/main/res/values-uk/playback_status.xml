@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">Локальний сервер: %1$s · %2$s</string>
+    <string name="playback_remote_server">Віддалений сервер: %1$s · %2$s</string>
+    <string name="playback_server_connected">Підключений</string>
+    <string name="playback_server_unreachable">Недоступний</string>
+    <string name="playback_server_checking">Перевірка підключення</string>
+    <string name="playback_app_loading">Застосунок: завантаження списку файлів</string>
+    <string name="playback_app_browsing">Застосунок: очікування вибору файлу</string>
+    <string name="playback_app_preparing">Застосунок: підготовка відтворення</string>
+    <string name="playback_app_choosing">Застосунок: очікування вибору плеєра</string>
+    <string name="playback_app_opening">Застосунок: відкриття плеєра</string>
+    <string name="playback_app_opened">Застосунок: відтворення відкрито в плеєрі</string>
+    <string name="playback_app_returned">Застосунок: повернення з плеєра · «Продовжити» знову відкриє відтворення</string>
+    <string name="playback_app_error">Застосунок: не вдалося відкрити відтворення</string>
+    <string name="playback_status_checking">Перевірка торента та кешу</string>
+    <string name="playback_status_unavailable">Стан торента недоступний</string>
+    <string name="playback_status_added">Торент у черзі</string>
+    <string name="playback_status_getting_info">Отримання інформації про файли</string>
+    <string name="playback_status_buffering">Буферизація перед відтворенням</string>
+    <string name="playback_status_stream_connected">Медіапотік підключений</string>
+    <string name="playback_status_cache_waiting">Кешовані дані очікують відтворення</string>
+    <string name="playback_status_cache_available">Торент активний · Дані є в кеші</string>
+    <string name="playback_status_downloading">Завантаження даних торента</string>
+    <string name="playback_status_no_buffer">Торент активний · Буфер порожній</string>
+    <string name="playback_status_inactive">Торент неактивний · Потрібна буферизація</string>
+    <string name="playback_status_unknown">Стан торента невідомий</string>
+    <string name="playback_cache_unknown">Стан кешу: недоступний</string>
+    <string name="playback_cache_bytes">Дані в кеші: %1$s</string>
+    <string name="playback_cache_capacity">Дані в кеші: %1$s / %2$s</string>
+    <string name="playback_streams">Потокові підключення: %1$s</string>
+    <string name="playback_not_reported">Немає даних</string>
+    <string name="playback_preload_progress">Початковий буфер: %1$s / %2$s</string>
+    <string name="playback_hint_checking">Оновлення стану сервера та перевірка збережених даних у кеші.</string>
+    <string name="playback_hint_cached">Дані залишилися в кеші. «Продовжити» відкриє плеєр; для збереженої позиції може знадобитися буферизація.</string>
+    <string name="playback_hint_stream">Медіапотік підключений. Швидкість завантаження може бути нульовою, поки використовуються дані з кешу.</string>
+    <string name="playback_hint_buffering">Сервер завантажує дані для відтворення. Дочекайтеся початкового буфера або натисніть «Продовжити».</string>
+    <string name="playback_hint_no_buffer">Активного буфера немає. «Продовжити» відкриє плеєр і знову завантажить потрібні дані.</string>
+    <string name="playback_hint_metadata">Очікування інформації про файли торента від пірів.</string>
+    <string name="playback_hint_unknown">Сервер не повідомив розпізнаваний стан торента.</string>
+</resources>

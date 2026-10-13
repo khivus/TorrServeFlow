@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">Server local: %1$s · %2$s</string>
+    <string name="playback_remote_server">Server la distanță: %1$s · %2$s</string>
+    <string name="playback_server_connected">Conectat</string>
+    <string name="playback_server_unreachable">Inaccesibil</string>
+    <string name="playback_server_checking">Se verifică conexiunea</string>
+    <string name="playback_app_loading">Aplicație: se încarcă fișierele torrentului</string>
+    <string name="playback_app_browsing">Aplicație: se așteaptă alegerea unui fișier</string>
+    <string name="playback_app_preparing">Aplicație: se pregătește redarea</string>
+    <string name="playback_app_choosing">Aplicație: se așteaptă alegerea unui player</string>
+    <string name="playback_app_opening">Aplicație: se deschide playerul</string>
+    <string name="playback_app_opened">Aplicație: redarea este deschisă în player</string>
+    <string name="playback_app_returned">Aplicație: revenire din player · «Continuă» deschide din nou redarea</string>
+    <string name="playback_app_error">Aplicație: redarea nu a putut fi deschisă</string>
+    <string name="playback_status_checking">Se verifică torrentul și memoria cache</string>
+    <string name="playback_status_unavailable">Starea torrentului nu este disponibilă</string>
+    <string name="playback_status_added">Torrent în așteptare</string>
+    <string name="playback_status_getting_info">Se obțin informații despre fișiere</string>
+    <string name="playback_status_buffering">Se încarcă bufferul înainte de redare</string>
+    <string name="playback_status_stream_connected">Flux media conectat</string>
+    <string name="playback_status_cache_waiting">Datele din cache așteaptă redarea</string>
+    <string name="playback_status_cache_available">Torrent activ · Date disponibile în cache</string>
+    <string name="playback_status_downloading">Se descarcă datele torrentului</string>
+    <string name="playback_status_no_buffer">Torrent activ · Buffer gol</string>
+    <string name="playback_status_inactive">Torrent inactiv · Este necesară încărcarea bufferului</string>
+    <string name="playback_status_unknown">Stare necunoscută a torrentului</string>
+    <string name="playback_cache_unknown">Starea memoriei cache: indisponibilă</string>
+    <string name="playback_cache_bytes">Date în cache: %1$s</string>
+    <string name="playback_cache_capacity">Date în cache: %1$s / %2$s</string>
+    <string name="playback_streams">Conexiuni de streaming: %1$s</string>
+    <string name="playback_not_reported">Nu sunt raportate</string>
+    <string name="playback_preload_progress">Buffer inițial: %1$s / %2$s</string>
+    <string name="playback_hint_checking">Se actualizează starea serverului și se verifică dacă datele din cache mai sunt disponibile.</string>
+    <string name="playback_hint_cached">Datele rămân în cache. «Continuă» redeschide playerul; poziția salvată poate necesita încărcarea bufferului.</string>
+    <string name="playback_hint_stream">Un flux media este conectat. Viteza de descărcare poate fi zero când sunt folosite datele din cache.</string>
+    <string name="playback_hint_buffering">Serverul descarcă date pentru redare. Așteptați bufferul inițial sau apăsați «Continuă».</string>
+    <string name="playback_hint_no_buffer">Nu există un buffer activ. «Continuă» deschide playerul și descarcă din nou datele necesare.</string>
+    <string name="playback_hint_metadata">Se așteaptă informațiile despre fișierele torrentului de la parteneri.</string>
+    <string name="playback_hint_unknown">Serverul nu a raportat o stare recunoscută a torrentului.</string>
+</resources>

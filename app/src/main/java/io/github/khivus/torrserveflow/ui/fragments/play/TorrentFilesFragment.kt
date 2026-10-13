@@ -1,7 +1,5 @@
 package io.github.khivus.torrserveflow.ui.fragments.play
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +23,7 @@ import io.github.khivus.torrserveflow.server.models.torrent.FileStat
 import io.github.khivus.torrserveflow.server.models.torrent.Torrent
 import io.github.khivus.torrserveflow.ui.fragments.TSFragment
 import io.github.khivus.torrserveflow.ui.activities.play.PlayActivity
+import io.github.khivus.torrserveflow.ui.activities.play.players.Players
 import io.github.khivus.torrserveflow.ui.fragments.play.adapters.TorrentFilesAdapter
 import io.github.khivus.torrserveflow.utils.Net
 import io.github.khivus.torrserveflow.utils.TorrentHelper
@@ -84,36 +83,10 @@ class TorrentFilesFragment : TSFragment() {
                 last
 
             findViewById<Button>(R.id.btnPlaylist).setOnClickListener {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    torrent?.let { torr ->
-                        try {
-                            if (Api.listTorrent().isNotEmpty()) {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.setDataAndType(Uri.parse(Net.getHostUrl("/playlist/${torr.name.urlEncode()}.m3u?hash=${torr.hash}")), "video/*")
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                App.context.startActivity(intent)
-                            }
-                        } catch (e: Exception) {
-                            e.message?.let { App.toast(it) }
-                        }
-                    }
-                }
+                openPlaylist(fromLast = false)
             }
             findViewById<Button>(R.id.btnPlaylistContinue).setOnClickListener {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    torrent?.let { torr ->
-                        try {
-                            if (Api.listTorrent().isNotEmpty()) {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.setDataAndType(Uri.parse(Net.getHostUrl("/playlist/${torr.name.urlEncode()}.m3u?hash=${torr.hash}&fromlast")), "video/*")
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                App.context.startActivity(intent)
-                            }
-                        } catch (e: Exception) {
-                            e.message?.let { App.toast(it) }
-                        }
-                    }
-                }
+                openPlaylist(fromLast = true)
             }
             findViewById<ListView>(R.id.lvTorrentFiles).apply {
                 adapter = torrFilesAdapter
@@ -182,5 +155,12 @@ class TorrentFilesFragment : TSFragment() {
                 }, 500)
             }
         }
+    }
+
+    private fun openPlaylist(fromLast: Boolean) {
+        val torr = torrent ?: return
+        val suffix = if (fromLast) "&fromlast" else ""
+        val url = Net.getHostUrl("/playlist/${torr.name.urlEncode()}.m3u?hash=${torr.hash}$suffix")
+        (activity as? PlayActivity)?.openPlayer(Players.getIntent(url, title = torr.title))
     }
 }

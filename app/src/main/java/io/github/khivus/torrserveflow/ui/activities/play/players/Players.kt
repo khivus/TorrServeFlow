@@ -21,10 +21,7 @@ object Players {
     fun getIntent(torrent: Torrent, index: Int, selectedPlayer: String?): Intent? {
         val file = TorrentHelper.findFile(torrent, index) ?: throw Exception("file in torrent not found")
         val link = TorrentHelper.getTorrentPlayLink(torrent, index)
-        var player = Settings.getPlayer()
-        if (!selectedPlayer.isNullOrEmpty()) {
-            player = selectedPlayer
-        }
+        val player = selectedPlayer ?: Settings.getPlayer()
         val mime = Mime.getMimeType(file.path)
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(link.toUri(), mime)
@@ -65,8 +62,19 @@ object Players {
             if (kodiIntent.resolveActivity(App.context.packageManager) != null)
                 return kodiIntent
         }
-        // user defined player
-        if (player.isNotEmpty()) {
+        return resolveIntent(intent, player)
+    }
+
+    fun getIntent(url: String, mime: String = "video/*", title: String? = null): Intent {
+        val intent = Intent(Intent.ACTION_VIEW).setDataAndType(url.toUri(), mime)
+        title?.let { intent.putExtra("title", it) }
+        return resolveIntent(intent, Settings.getPlayer())
+    }
+
+    private fun resolveIntent(intent: Intent, player: String): Intent {
+        if (player == "0" && intent.resolveActivity(App.context.packageManager) != null)
+            return intent
+        if (player.isNotEmpty() && player != "0") {
             intent.`package` = player
             if (intent.resolveActivity(App.context.packageManager) != null)
                 return intent

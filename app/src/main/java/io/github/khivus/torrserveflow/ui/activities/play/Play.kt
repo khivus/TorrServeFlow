@@ -91,6 +91,7 @@ object Play {
     }
 
     private suspend fun PlayActivity.streamTorrent(torrent: Torrent, index: Int) {
+        onFileSelected(index)
         showProgress()
         var torr = torrent
 
@@ -119,33 +120,17 @@ object Play {
                 tmpPlayerPackage = null
             } else if (Settings.getPlayer().isEmpty()) {
                 // show chooser
+                playbackAction.value = PlaybackAction.CHOOSING_PLAYER
                 PlayersDialog.show(this, torr, index) { player ->
                     playerIntent = Players.getIntent(torr, index, player)
-                    //if (BuildConfig.DEBUG) Log.d("*****", "Player intent: ${playerIntent?.toUri(0)}")
-                    playerIntent?.let {
-                        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        try {
-                            App.context.startActivity(it)
-                            successful(it)
-                        } catch (e: Exception) {
-                            error(ErrProcessIntent)
-                        }
-                    }
+                    playerIntent?.let { openPlayer(it) }
                 }
             } else
                 playerIntent = Players.getIntent(torr, index, null)
         } catch (e: Exception) {
+            playbackAction.value = PlaybackAction.ERROR
             e.message?.let { App.toast(it) }
         }
-        //if (BuildConfig.DEBUG) Log.d("*****", "Player intent: ${playerIntent?.toUri(0)}")
-        playerIntent?.let {
-            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                App.context.startActivity(it)
-                successful(it)
-            } catch (e: Exception) {
-                error(ErrProcessIntent)
-            }
-        }
+        playerIntent?.let { openPlayer(it) }
     }
 }

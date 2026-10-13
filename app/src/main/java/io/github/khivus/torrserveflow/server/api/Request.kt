@@ -14,6 +14,8 @@ class SettingsReq(
     val Sets: BTSets
 ) : Request(action)
 
+class CacheReq(val hash: String) : Request("get")
+
 class TorrentReq(
     action: String,
     val hash: String = "",

@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.util.Log
+import android.view.GestureDetector
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -28,6 +30,7 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 import io.github.khivus.torrserveflow.BuildConfig
 import io.github.khivus.torrserveflow.R
 import io.github.khivus.torrserveflow.app.App
@@ -64,6 +67,37 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: StatusViewModel
     private val themeUtil = ThemeUtil()
+    private var openMenuOnSwipe = false
+    private val menuSwipeDetector by lazy {
+        val minimumDistance = dp2px(72f)
+        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent): Boolean = true
+
+            override fun onFling(start: MotionEvent?, end: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                if (start == null || findViewById<DrawerLayout>(R.id.drawerLayout).isDrawerVisible(GravityCompat.START))
+                    return false
+                val distanceX = end.x - start.x
+                val distanceY = end.y - start.y
+                openMenuOnSwipe = distanceX >= minimumDistance && distanceX > abs(distanceY) * 1.5f && velocityX > 0
+                return openMenuOnSwipe
+            }
+        })
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        openMenuOnSwipe = false
+        menuSwipeDetector.onTouchEvent(event)
+        if (openMenuOnSwipe) {
+            // Cancel the original target so a navigation swipe cannot also activate a row or button.
+            val cancel = MotionEvent.obtain(event)
+            cancel.action = MotionEvent.ACTION_CANCEL
+            super.dispatchTouchEvent(cancel)
+            cancel.recycle()
+            openMenu()
+            return true
+        }
+        return super.dispatchTouchEvent(event)
+    }
 
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">Локальный сервер: %1$s · %2$s</string>
+    <string name="playback_remote_server">Удалённый сервер: %1$s · %2$s</string>
+    <string name="playback_server_connected">Подключён</string>
+    <string name="playback_server_unreachable">Недоступен</string>
+    <string name="playback_server_checking">Проверка подключения</string>
+    <string name="playback_app_loading">Приложение: загрузка списка файлов</string>
+    <string name="playback_app_browsing">Приложение: ожидание выбора файла</string>
+    <string name="playback_app_preparing">Приложение: подготовка воспроизведения</string>
+    <string name="playback_app_choosing">Приложение: ожидание выбора плеера</string>
+    <string name="playback_app_opening">Приложение: открытие плеера</string>
+    <string name="playback_app_opened">Приложение: воспроизведение открыто в плеере</string>
+    <string name="playback_app_returned">Приложение: возврат из плеера · «Продолжить» снова откроет воспроизведение</string>
+    <string name="playback_app_error">Приложение: не удалось открыть воспроизведение</string>
+    <string name="playback_status_checking">Проверка торрента и кэша</string>
+    <string name="playback_status_unavailable">Состояние торрента недоступно</string>
+    <string name="playback_status_added">Торрент в очереди</string>
+    <string name="playback_status_getting_info">Получение информации о файлах</string>
+    <string name="playback_status_buffering">Буферизация перед воспроизведением</string>
+    <string name="playback_status_stream_connected">Медиапоток подключён</string>
+    <string name="playback_status_cache_waiting">Кэш ожидает воспроизведения</string>
+    <string name="playback_status_cache_available">Торрент активен · Данные есть в кэше</string>
+    <string name="playback_status_downloading">Загрузка данных торрента</string>
+    <string name="playback_status_no_buffer">Торрент активен · Буфер пуст</string>
+    <string name="playback_status_inactive">Торрент неактивен · Нужна буферизация</string>
+    <string name="playback_status_unknown">Состояние торрента неизвестно</string>
+    <string name="playback_cache_unknown">Состояние кэша: недоступно</string>
+    <string name="playback_cache_bytes">Данные в кэше: %1$s</string>
+    <string name="playback_cache_capacity">Данные в кэше: %1$s / %2$s</string>
+    <string name="playback_streams">Потоковые подключения: %1$s</string>
+    <string name="playback_not_reported">Нет данных</string>
+    <string name="playback_preload_progress">Стартовый буфер: %1$s / %2$s</string>
+    <string name="playback_hint_checking">Обновление состояния сервера и проверка сохранённых данных в кэше.</string>
+    <string name="playback_hint_cached">Данные остались в кэше. «Продолжить» откроет плеер; для сохранённой позиции может потребоваться буферизация.</string>
+    <string name="playback_hint_stream">Медиапоток подключён. Скорость загрузки может быть нулевой, пока используются данные из кэша.</string>
+    <string name="playback_hint_buffering">Сервер загружает данные для воспроизведения. Дождитесь стартового буфера или нажмите «Продолжить».</string>
+    <string name="playback_hint_no_buffer">Активного буфера нет. «Продолжить» откроет плеер и заново загрузит нужные данные.</string>
+    <string name="playback_hint_metadata">Ожидание информации о файлах торрента от пиров.</string>
+    <string name="playback_hint_unknown">Сервер не сообщил распознаваемое состояние торрента.</string>
+</resources>

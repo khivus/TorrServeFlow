@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_local_server">本地服务器：%1$s · %2$s</string>
+    <string name="playback_remote_server">远程服务器：%1$s · %2$s</string>
+    <string name="playback_server_connected">已连接</string>
+    <string name="playback_server_unreachable">无法连接</string>
+    <string name="playback_server_checking">正在检查连接</string>
+    <string name="playback_app_loading">应用：正在加载种子文件列表</string>
+    <string name="playback_app_browsing">应用：等待选择文件</string>
+    <string name="playback_app_preparing">应用：正在准备播放</string>
+    <string name="playback_app_choosing">应用：等待选择播放器</string>
+    <string name="playback_app_opening">应用：正在打开播放器</string>
+    <string name="playback_app_opened">应用：已在播放器中打开播放</string>
+    <string name="playback_app_returned">应用：已从播放器返回 · 点击“继续”可再次打开播放</string>
+    <string name="playback_app_error">应用：无法打开播放</string>
+    <string name="playback_status_checking">正在检查种子和缓存</string>
+    <string name="playback_status_unavailable">无法获取种子状态</string>
+    <string name="playback_status_added">种子已排队</string>
+    <string name="playback_status_getting_info">正在获取文件信息</string>
+    <string name="playback_status_buffering">正在进行播放前缓冲</string>
+    <string name="playback_status_stream_connected">媒体流已连接</string>
+    <string name="playback_status_cache_waiting">缓存数据正在等待播放</string>
+    <string name="playback_status_cache_available">种子运行中 · 缓存数据可用</string>
+    <string name="playback_status_downloading">正在下载种子数据</string>
+    <string name="playback_status_no_buffer">种子运行中 · 缓冲区为空</string>
+    <string name="playback_status_inactive">种子未运行 · 需要缓冲</string>
+    <string name="playback_status_unknown">种子状态未知</string>
+    <string name="playback_cache_unknown">缓存状态：不可用</string>
+    <string name="playback_cache_bytes">已缓存数据：%1$s</string>
+    <string name="playback_cache_capacity">已缓存数据：%1$s / %2$s</string>
+    <string name="playback_streams">流连接数：%1$s</string>
+    <string name="playback_not_reported">未报告</string>
+    <string name="playback_preload_progress">起始缓冲：%1$s / %2$s</string>
+    <string name="playback_hint_checking">正在更新服务器状态并检查缓存数据是否仍然存在。</string>
+    <string name="playback_hint_cached">缓存数据仍然存在。点击“继续”将重新打开播放器；保存的播放位置可能仍需缓冲。</string>
+    <string name="playback_hint_stream">媒体流已连接。使用缓存数据时，下载速度可能为零。</string>
+    <string name="playback_hint_buffering">服务器正在下载播放数据。请等待起始缓冲完成，或点击“继续”。</string>
+    <string name="playback_hint_no_buffer">当前没有可用缓冲。点击“继续”将打开播放器并重新下载所需数据。</string>
+    <string name="playback_hint_metadata">正在等待其他节点提供种子文件信息。</string>
+    <string name="playback_hint_unknown">服务器未报告可识别的种子状态。</string>
+</resources>

@@ -1,6 +1,7 @@
 package io.github.khivus.torrserveflow.ui.activities.play
 
 import android.content.res.Configuration
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import io.github.khivus.torrserveflow.app.App
 import io.github.khivus.torrserveflow.server.api.Api
 import io.github.khivus.torrserveflow.server.local.TorrService
 import io.github.khivus.torrserveflow.server.models.torrent.Torrent
+import io.github.khivus.torrserveflow.settings.Settings
 import io.github.khivus.torrserveflow.ui.activities.play.Play.play
 import io.github.khivus.torrserveflow.ui.fragments.main.servfinder.ServerFinderFragment
 import io.github.khivus.torrserveflow.ui.fragments.main.update.server.UpdaterServer
@@ -41,6 +44,10 @@ class PlayActivity : AppCompatActivity() {
     var torrentData: String = ""
     var torrentSave: Boolean = false
     var torrentFileIndex: Int = -1
+    var torrentFileId: Int = -1
+        private set
+    val playbackAction = MutableLiveData(PlaybackAction.LOADING_FILES)
+    private var playerLaunched = false
 
     private var userClose = false
     private var intentProcessed = false
@@ -76,16 +83,16 @@ class PlayActivity : AppCompatActivity() {
             title = if (isBrowsing) getString(R.string.torrent_files)
             else torrentTitle.ifBlank { getString(R.string.torrent_files) }
             inflateMenu(R.menu.torrent_details_menu)
-            menu.findItem(R.id.actionTorrentDetails).isChecked = !isBrowsing
             setOnMenuItemClickListener { item ->
                 if (item.itemId == R.id.actionTorrentDetails) {
-                    item.isChecked = !item.isChecked
-                    this@PlayActivity.findViewById<View>(R.id.info_container).visibility = if (item.isChecked) View.VISIBLE else View.GONE
+                    val showDetails = !item.isChecked
+                    Settings.setShowTorrentDetails(showDetails)
+                    showTorrentDetails(showDetails)
                     true
                 } else false
             }
         }
-        if (isBrowsing) findViewById<View>(R.id.info_container).visibility = View.GONE
+        showTorrentDetails(if (isBrowsing) Settings.showTorrentDetails() else true)
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
@@ -103,6 +110,10 @@ class PlayActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         themeUtil.onResume(this)
+        if (playerLaunched) {
+            playerLaunched = false
+            playbackAction.value = PlaybackAction.RETURNED_FROM_PLAYER
+        }
         if (intentProcessed) return
         readArgs()
         lifecycleScope.launch(Dispatchers.IO) {
@@ -235,7 +246,33 @@ class PlayActivity : AppCompatActivity() {
 
     fun onFileListShown() {
         isShowingFiles = true
+        playbackAction.value = PlaybackAction.BROWSING_FILES
         findViewById<MaterialToolbar>(R.id.toolbar).setTitle(R.string.torrent_files)
+        showTorrentDetails(Settings.showTorrentDetails(default = !isBrowsing))
+    }
+
+    fun onFileSelected(id: Int) {
+        torrentFileId = id
+        playbackAction.value = PlaybackAction.PREPARING_PLAYBACK
+    }
+
+    fun openPlayer(intent: Intent) {
+        playbackAction.value = PlaybackAction.OPENING_PLAYER
+        try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            App.context.startActivity(intent)
+            playerLaunched = true
+            playbackAction.value = PlaybackAction.PLAYER_OPENED
+            successful(intent)
+        } catch (_: Exception) {
+            playbackAction.value = PlaybackAction.ERROR
+            error(ErrProcessIntent)
+        }
+    }
+
+    private fun showTorrentDetails(show: Boolean) {
+        findViewById<MaterialToolbar>(R.id.toolbar).menu.findItem(R.id.actionTorrentDetails).isChecked = show
+        findViewById<View>(R.id.info_container).visibility = if (show) View.VISIBLE else View.GONE
     }
 
 }

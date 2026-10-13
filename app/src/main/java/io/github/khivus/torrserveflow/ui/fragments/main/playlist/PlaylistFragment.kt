@@ -1,6 +1,5 @@
 package io.github.khivus.torrserveflow.ui.fragments.main.playlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.khivus.torrserveflow.R
 import io.github.khivus.torrserveflow.app.App
+import io.github.khivus.torrserveflow.ui.activities.play.players.Players
 import io.github.khivus.torrserveflow.ui.fragments.TSFragment
 import io.github.khivus.torrserveflow.utils.M3uPlaylist
 import io.github.khivus.torrserveflow.utils.Net
@@ -87,7 +86,7 @@ class PlaylistFragment : TSFragment() {
 
     private fun openPlayer(url: String) {
         try {
-            startActivity(Intent(Intent.ACTION_VIEW).setDataAndType(url.toUri(), "video/*"))
+            startActivity(Players.getIntent(url))
         } catch (_: Exception) {
             App.toast(R.string.error_process_intent)
         }

@@ -13,6 +13,22 @@
     android:layout_marginBottom="6dp"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tvServerConnection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:textSize="13sp"
+        tools:text="Local server: Connected · localhost:8090" />
+
+    <TextView
+        android:id="@+id/tvAppAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:textColor="?attr/colorOnBackground"
+        tools:text="App: Waiting for a file selection" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHead"
         android:layout_width="match_parent"
@@ -86,7 +102,6 @@
             android:layout_marginStart="11dp"
             android:layout_marginLeft="11dp"
             android:layout_marginBottom="6dp"
-            android:textAllCaps="true"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/tvFileName"
             app:layout_constraintEnd_toEndOf="parent"
@@ -201,4 +216,12 @@
             tools:text="Buffer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvCacheHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="13sp"
+        tools:text="Cached data remains. Continue reopens your player; the saved position may still need buffering." />
 </LinearLayout>

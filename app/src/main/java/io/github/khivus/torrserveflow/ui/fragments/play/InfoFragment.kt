@@ -2,6 +2,7 @@ package io.github.khivus.torrserveflow.ui.fragments.play
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -21,7 +22,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.khivus.torrserveflow.R
@@ -30,6 +30,7 @@ import io.github.khivus.torrserveflow.server.local.TorrService
 import io.github.khivus.torrserveflow.server.models.torrent.FileStat
 import io.github.khivus.torrserveflow.settings.Settings
 import io.github.khivus.torrserveflow.ui.activities.play.PlayActivity
+import io.github.khivus.torrserveflow.ui.activities.play.PlaybackAction
 import io.github.khivus.torrserveflow.ui.fragments.TSFragment
 import io.github.khivus.torrserveflow.ui.fragments.play.viewmodels.InfoTorrent
 import io.github.khivus.torrserveflow.ui.fragments.play.viewmodels.InfoViewModel
@@ -39,8 +40,8 @@ import io.github.khivus.torrserveflow.utils.SpanFormat
 import io.github.khivus.torrserveflow.utils.ThemeUtil
 import io.github.khivus.torrserveflow.utils.ThemeUtil.Companion.getColorFromAttr
 import io.github.khivus.torrserveflow.utils.TorrentHelper
+import io.github.khivus.torrserveflow.utils.TorrentPlaybackStatus
 import java.io.File
-import java.util.Locale
 
 open class InfoFragment : TSFragment() {
 
@@ -59,27 +60,61 @@ open class InfoFragment : TSFragment() {
     }
 
     private var posterUrl = " "
-    suspend fun startInfo(hash: String) = withContext(Dispatchers.Main) {
-        try {
-            viewModel = ViewModelProvider(this@InfoFragment)[InfoViewModel::class.java]
-            if (isActive) {
-                val data = (viewModel as InfoViewModel).setTorrent(hash)
-                data.observe(this@InfoFragment) {
-                    updateUI(it, (requireActivity() as PlayActivity).torrentFileIndex)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private var latestInfo = InfoTorrent(null)
+    private var renderedInfo: InfoTorrent? = null
+    private var renderedIndex = -1
+    private var renderedAction: PlaybackAction? = null
+    private val infoViewModel: InfoViewModel
+        get() = ViewModelProvider(this)[InfoViewModel::class.java]
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        infoViewModel.data.observe(viewLifecycleOwner) {
+            latestInfo = it
+            updateUI(it, (activity as? PlayActivity)?.torrentFileIndex ?: -1)
         }
+        (activity as? PlayActivity)?.playbackAction?.observe(viewLifecycleOwner) {
+            updateUI(latestInfo, (activity as? PlayActivity)?.torrentFileIndex ?: -1)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        infoViewModel.startUpdates()
+    }
+
+    override fun onStop() {
+        infoViewModel.stopUpdates()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        renderedInfo = null
+        super.onDestroyView()
+    }
+
+    suspend fun startInfo(hash: String) = withContext(Dispatchers.Main) {
+        infoViewModel.setTorrent(hash)
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateUI(info: InfoTorrent, index: Int) {
-        if (view?.isShown != true) return
+        if (view == null) return
+        val action = (activity as? PlayActivity)?.playbackAction?.value
+        if (info == renderedInfo && index == renderedIndex && action == renderedAction) return
+        renderedInfo = info
+        renderedIndex = index
+        renderedAction = action
         lifecycleScope.launch {
             view?.findViewById<ConstraintLayout?>(R.id.clInfo)?.visibility = View.VISIBLE
-            if (info.torrent == null && info.error.isNotEmpty()) {
-                view?.findViewById<TextView?>(R.id.tvInfo)?.text = info.error
+            renderStatus(info)
+            if (info.torrent == null) {
+                listOf(R.id.tvPeers, R.id.tvSeeds, R.id.tvSpeed).forEach {
+                    view?.findViewById<TextView>(it)?.text = ""
+                }
+                listOf(R.id.tvDuration, R.id.tvBitrate, R.id.tvFileSize).forEach {
+                    view?.findViewById<View>(it)?.visibility = View.GONE
+                }
                 return@launch
             }
             info.torrent?.let { torr ->
@@ -103,7 +138,7 @@ open class InfoFragment : TSFragment() {
                     }
                     val category = torr.category ?: ""
                     val title = torr.title
-                    val tv = findViewById<TextView?>(R.id.tvTitle)
+                    val tv = findViewById<TextView>(R.id.tvTitle)
 
                     if (title.isEmpty() || (activity as? PlayActivity)?.let { it.isBrowsing || it.isShowingFiles } == true)
                         tv.visibility = View.GONE
@@ -132,7 +167,9 @@ open class InfoFragment : TSFragment() {
                             tv.text = title
                     }
 
-                    val file: FileStat? = if (index > 0 && index < torr.file_stats?.size!!) torr.file_stats?.get(index) else if (index == 0) TorrentHelper.getPlayableFiles(torr)[index] else null
+                    val file: FileStat? = (activity as? PlayActivity)?.torrentFileId?.takeIf { it > 0 }
+                        ?.let { TorrentHelper.findFile(torr, it) }
+                        ?: TorrentHelper.getPlayableFiles(torr).getOrNull(index)
                     val themedContext = ContextThemeWrapper(this.context, ThemeUtil.selectedTheme)
                     val color1 = ColorUtils.setAlphaComponent(getColorFromAttr(themedContext, R.attr.colorBright), 200)
                     val color2 = ColorUtils.setAlphaComponent(getColorFromAttr(themedContext, R.attr.colorBright), 240)
@@ -161,29 +198,13 @@ open class InfoFragment : TSFragment() {
                             }
                         }
                     } ?: let {
-                        tvFileName.visibility = View.INVISIBLE
+                        tvFileName.visibility = View.GONE
                         tvFileSize.visibility = View.GONE
                     }
 
-                    var buffer = ""
                     var prc = 0.0
-                    if (torr.preload_size > 0 && torr.preloaded_bytes > 0) {
-                        prc = torr.preloaded_bytes.toDouble() * 100.0 / torr.preload_size.toDouble()
-                        if (prc < 100.0)
-                            buffer = "%.1f".format(prc) + "% "
-                        buffer += Format.byteFmt(torr.preloaded_bytes)
-                        if (prc < 100.0)
-                            buffer += "/" + Format.byteFmt(torr.preload_size)
-                    }
-
-                    if (buffer.isNotEmpty()) {
-                        // spannable
-                        findViewById<TextView>(R.id.tvBuffer).apply {
-                            text = "" // txt
-                            append("${getString(R.string.buffer)} ", color1, true)
-                            append(buffer, color2, true)
-                        }
-                    }
+                    if (torr.preload_size > 0)
+                        prc = (torr.preloaded_bytes.toDouble() * 100.0 / torr.preload_size).coerceIn(0.0, 100.0)
 
                     if (torr.stat < TorrentHelper.T_STATE_WORKING) {
                         if (prc > 0 && prc < 100)
@@ -215,7 +236,7 @@ open class InfoFragment : TSFragment() {
 
                     //val speed = Format.byteFmt(torr.download_speed) + getString(R.string.fmt_s)
                     val speed = Format.speedFmt(torr.download_speed)
-                    if (speed.isNotEmpty() && torr.download_speed > 50.0) {
+                    if (speed.isNotEmpty()) {
                         // spannable
                         findViewById<TextView>(R.id.tvSpeed).apply {
                             text = "" // txt
@@ -225,48 +246,101 @@ open class InfoFragment : TSFragment() {
                     }
                     // ffprobe addons
                     val tvdr = findViewById<TextView>(R.id.tvDuration)
-                    torr.duration_seconds?.let { ds ->
-                        if (!ds.isNaN()) {
-                            val duration = Format.durFmtS(ds)
-                            tvdr.apply {
-                                text = "" // txt
-                                append("${getString(R.string.runtime)} ", color1, true)
-                                append(duration, color2, true)
-                                visibility = View.VISIBLE
-                            }
+                    torr.duration_seconds?.takeIf { it.isFinite() && it > 0 }?.let { ds ->
+                        val duration = Format.durFmtS(ds)
+                        tvdr.apply {
+                            text = "" // txt
+                            append("${getString(R.string.runtime)} ", color1, true)
+                            append(duration, color2, true)
+                            visibility = View.VISIBLE
                         }
                     } ?: let {
                         tvdr.visibility = View.GONE
                     }
                     val tvbr = findViewById<TextView>(R.id.tvBitrate)
-                    torr.bit_rate?.let { br ->
-                        if (br.isNotBlank()) {
-                            val bitRate = Format.speedFmt(br.toDouble() / 8)
-                            tvbr.apply {
-                                text = "" // txt
-                                append("${getString(R.string.bit_rate)} ", color1, true)
-                                append(bitRate, color2, true)
-                                visibility = View.VISIBLE
-                            }
+                    torr.bit_rate?.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0 }?.let { br ->
+                        val bitRate = Format.speedFmt(br / 8)
+                        tvbr.apply {
+                            text = "" // txt
+                            append("${getString(R.string.bit_rate)} ", color1, true)
+                            append(bitRate, color2, true)
+                            visibility = View.VISIBLE
                         }
                     } ?: let {
                         tvbr.visibility = View.GONE
                     }
 
-                    view?.findViewById<TextView>(R.id.tvInfo)?.apply {
-                        text = when (torr.stat_string.lowercase(Locale.getDefault())) {
-                            "torrent added" -> getString(R.string.stat_string_added)
-                            "torrent getting info" -> getString(R.string.stat_string_info)
-                            "torrent preload" -> getString(R.string.stat_string_preload)
-                            "torrent working" -> getString(R.string.stat_string_working)
-                            "torrent closed" -> getString(R.string.stat_string_closed)
-                            "torrent in db" -> getString(R.string.stat_string_in_db)
-                            else -> torr.stat_string
-                        }
-                    }
-
                 }
             }
         }
+    }
+
+    private fun renderStatus(info: InfoTorrent) {
+        val screen = view ?: return
+        val torr = info.torrent
+        val uri = Uri.parse(Settings.getHost())
+        val address = uri.host.orEmpty() + if (uri.port > 0) ":${uri.port}" else ""
+        val connection = when {
+            torr != null || info.serverConnected == true -> R.string.playback_server_connected
+            info.serverConnected == false -> R.string.playback_server_unreachable
+            else -> R.string.playback_server_checking
+        }
+        screen.findViewById<TextView>(R.id.tvServerConnection).text = getString(
+            if (TorrService.isLocal()) R.string.playback_local_server else R.string.playback_remote_server,
+            getString(connection), address
+        )
+        val action = when ((activity as? PlayActivity)?.playbackAction?.value) {
+            PlaybackAction.BROWSING_FILES -> R.string.playback_app_browsing
+            PlaybackAction.PREPARING_PLAYBACK -> R.string.playback_app_preparing
+            PlaybackAction.CHOOSING_PLAYER -> R.string.playback_app_choosing
+            PlaybackAction.OPENING_PLAYER -> R.string.playback_app_opening
+            PlaybackAction.PLAYER_OPENED -> R.string.playback_app_opened
+            PlaybackAction.RETURNED_FROM_PLAYER -> R.string.playback_app_returned
+            PlaybackAction.ERROR -> R.string.playback_app_error
+            else -> R.string.playback_app_loading
+        }
+        screen.findViewById<TextView>(R.id.tvAppAction).setText(action)
+        if (torr == null) {
+            screen.findViewById<TextView>(R.id.tvInfo).setText(
+                if (info.error.isBlank()) R.string.playback_status_checking else R.string.playback_status_unavailable
+            )
+            screen.findViewById<TextView>(R.id.tvBuffer).setText(R.string.playback_cache_unknown)
+            screen.findViewById<TextView>(R.id.tvCacheHint).text = info.error.ifBlank { getString(R.string.playback_hint_checking) }
+            return
+        }
+        val active = torr.stat == TorrentHelper.T_STATE_WORKING || torr.stat == TorrentHelper.T_STATE_PRELOAD
+        val bytes = if (active) (info.cache?.filled ?: torr.preloaded_bytes).coerceAtLeast(0) else 0L
+        val readers = info.cache?.readers?.size
+        val status = TorrentPlaybackStatus.resolve(torr.stat, bytes, readers, torr.download_speed)
+        val label = when (status) {
+            TorrentPlaybackStatus.ADDED -> R.string.playback_status_added
+            TorrentPlaybackStatus.GETTING_INFO -> R.string.playback_status_getting_info
+            TorrentPlaybackStatus.BUFFERING -> R.string.playback_status_buffering
+            TorrentPlaybackStatus.STREAM_CONNECTED -> R.string.playback_status_stream_connected
+            TorrentPlaybackStatus.CACHE_WAITING -> R.string.playback_status_cache_waiting
+            TorrentPlaybackStatus.CACHE_AVAILABLE -> R.string.playback_status_cache_available
+            TorrentPlaybackStatus.DOWNLOADING -> R.string.playback_status_downloading
+            TorrentPlaybackStatus.NO_BUFFER -> R.string.playback_status_no_buffer
+            TorrentPlaybackStatus.INACTIVE -> R.string.playback_status_inactive
+            TorrentPlaybackStatus.UNKNOWN -> R.string.playback_status_unknown
+        }
+        screen.findViewById<TextView>(R.id.tvInfo).setText(label)
+        val capacity = info.cache?.capacity?.takeIf { it > 0 }?.let { Format.byteFmt(it) }
+        val cacheText = if (capacity != null) getString(R.string.playback_cache_capacity, Format.byteFmt(bytes), capacity)
+            else getString(R.string.playback_cache_bytes, Format.byteFmt(bytes))
+        val streams = getString(R.string.playback_streams, readers?.toString() ?: getString(R.string.playback_not_reported))
+        val preload = if (torr.stat == TorrentHelper.T_STATE_PRELOAD && torr.preload_size > 0)
+            "\n" + getString(R.string.playback_preload_progress, Format.byteFmt(torr.preloaded_bytes.coerceAtLeast(0)), Format.byteFmt(torr.preload_size))
+        else ""
+        screen.findViewById<TextView>(R.id.tvBuffer).text = "$cacheText\n$streams$preload"
+        val hint = when (status) {
+            TorrentPlaybackStatus.CACHE_WAITING, TorrentPlaybackStatus.CACHE_AVAILABLE -> R.string.playback_hint_cached
+            TorrentPlaybackStatus.STREAM_CONNECTED -> R.string.playback_hint_stream
+            TorrentPlaybackStatus.BUFFERING, TorrentPlaybackStatus.DOWNLOADING -> R.string.playback_hint_buffering
+            TorrentPlaybackStatus.NO_BUFFER, TorrentPlaybackStatus.INACTIVE -> R.string.playback_hint_no_buffer
+            TorrentPlaybackStatus.ADDED, TorrentPlaybackStatus.GETTING_INFO -> R.string.playback_hint_metadata
+            else -> R.string.playback_hint_unknown
+        }
+        screen.findViewById<TextView>(R.id.tvCacheHint).setText(hint)
     }
 }
