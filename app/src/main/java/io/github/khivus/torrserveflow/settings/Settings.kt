@@ -47,8 +47,6 @@ object Settings {
         set(discoveredServerNamesKey, names)
     }
 
-    fun getLastViewDonate() = get("last_view_donate", 0L)
-    fun setLastViewDonate(v: Long) = set("last_view_donate", v)
 
 
     fun getPlayer(): String = get(App.context.getString(R.string.player_pref_key), "")

@@ -42,7 +42,6 @@ import io.github.khivus.torrserveflow.server.local.TorrService
 import io.github.khivus.torrserveflow.settings.Settings
 import io.github.khivus.torrserveflow.ui.fragments.add.AddFragment
 import io.github.khivus.torrserveflow.ui.fragments.donate.DonateFragment
-import io.github.khivus.torrserveflow.ui.fragments.donate.DonateMessage
 import io.github.khivus.torrserveflow.ui.fragments.main.servfinder.ServerFinderFragment
 import io.github.khivus.torrserveflow.ui.fragments.main.servsets.ServerSettingsFragment
 import io.github.khivus.torrserveflow.ui.fragments.main.settings.SettingsFragment
@@ -172,7 +171,6 @@ class MainActivity : AppCompatActivity() {
             TorrentsFragment().apply {
                 show(this@MainActivity, R.id.container)
             }
-            DonateMessage.showDonate(this)
             checkUpdate()
         }
     }

@@ -1,18 +1,12 @@
 package io.github.khivus.torrserveflow.server.api
 
 import com.google.gson.Gson
-import io.github.khivus.torrserveflow.settings.BTSets
 
 open class Request(val action: String) {
     override fun toString(): String {
         return Gson().toJson(this)
     }
 }
-
-class SettingsReq(
-    action: String,
-    val Sets: BTSets
-) : Request(action)
 
 class CacheReq(val hash: String) : Request("get")
 
@@ -30,10 +24,12 @@ class TorrentReq(
 class ViewedReq(
     action: String,
     val hash: String = "",
-    val file_index: Int = -1
+    val file_index: Int = -1,
+    val timecode: Double = 0.0 // playback position, seconds
 ) : Request(action)
 
 data class Viewed(
     val hash: String,
-    val file_index: Int
+    val file_index: Int,
+    val timecode: Double = 0.0 // playback position, seconds
 )
