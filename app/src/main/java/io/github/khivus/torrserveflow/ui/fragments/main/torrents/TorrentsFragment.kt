@@ -7,8 +7,10 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ListView
-import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +29,8 @@ import io.github.khivus.torrserveflow.utils.TorrentHelper
 class TorrentsFragment : TSFragment() {
 
     private var torrentAdapter: TorrentsAdapter? = null
-    private lateinit var emptyView: TextView
     private var sortMode: Boolean = Settings.sortTorrByTitle
+    private var category = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +38,9 @@ class TorrentsFragment : TSFragment() {
     ): View {
         val vi = inflater.inflate(R.layout.main_fragment, container, false)
         torrentAdapter = TorrentsAdapter(requireActivity())
-        emptyView = vi.findViewById(R.id.empty_view)
         vi.findViewById<ListView>(R.id.lvTorrents)?.let { lvTorrents ->
             lvTorrents.adapter = torrentAdapter
+            lvTorrents.emptyView = vi.findViewById(R.id.empty_view)
             lvTorrents.setOnItemClickListener { _, _, i, _ ->
                 val torr = torrentAdapter?.getItem(i) as Torrent
                 val intent = Intent(requireContext(), PlayActivity::class.java)
@@ -56,18 +58,19 @@ class TorrentsFragment : TSFragment() {
         return vi
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        category = arguments?.getString("category") ?: ""
+        viewModel = ViewModelProvider(this)[TorrentsViewModel::class.java]
+        (viewModel as TorrentsViewModel).getData().observe(viewLifecycleOwner) { updateList() }
+        applySearchBarVisibility()
+        view.findViewById<EditText>(R.id.etSearch).doAfterTextChanged { updateList() }
+    }
+
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            start()
-
-            val category =
-                arguments?.getString("category") ?: ""
-
-            if (category.isNotEmpty()) {
-                filter(category)
-            }
-        }
+        (viewModel as TorrentsViewModel).setUpdate(true)
+        applySearchBarVisibility()
     }
 
     override fun onPause() {
@@ -78,20 +81,11 @@ class TorrentsFragment : TSFragment() {
 
     fun sort(mode: Boolean = sortMode) {
         val list = torrentAdapter!!.list
-        if (list.size > 0) {
-            when (mode) {
-                false -> {
-                    torrentAdapter?.update(list.sortedBy { it.title })
-                    App.toast(R.string.sort_by_name)
-                }
-
-                true -> {
-                    torrentAdapter?.update(list.sortedByDescending { it.timestamp })
-                    App.toast(R.string.sort_by_date)
-                }
-            }
+        if (list.isNotEmpty()) {
             sortMode = !mode
             Settings.set("sort_torrents", sortMode)
+            updateList()
+            App.toast(if (sortMode) R.string.sort_by_name else R.string.sort_by_date)
             activity?.findViewById<ListView>(R.id.lvTorrents)?.apply {
                 this.setSelection(0)
                 requestFocus()
@@ -100,35 +94,22 @@ class TorrentsFragment : TSFragment() {
     }
 
     suspend fun filter(cat: String = "") = withContext(Dispatchers.Main) {
-        val data = (viewModel as TorrentsViewModel).getData()
-        data.observe(viewLifecycleOwner) { list ->
-            val fltList = if (cat == "uncategorized")
-                list.filter { it.category.isNullOrBlank() }
-            else if (cat.isNotBlank())
-                list.filter { it.category?.contains(cat, true) == true }
-            else
-                list
-            torrentAdapter?.update(fltList)
-            if (fltList.isEmpty()) {
-                emptyView.visibility = View.VISIBLE
-            } else {
-                emptyView.visibility = View.GONE
-            }
-        }
+        category = cat
+        updateList()
     }
 
-    suspend fun start() = withContext(Dispatchers.Main) {
-        viewModel = ViewModelProvider(this@TorrentsFragment)[TorrentsViewModel::class.java]
-        val data = (viewModel as TorrentsViewModel).getData()
-        (viewModel as TorrentsViewModel).setUpdate(true)
-        data.observe(viewLifecycleOwner) {
-            torrentAdapter?.update(it)
-            if (it.isEmpty()) {
-                emptyView.visibility = View.VISIBLE
-            } else {
-                emptyView.visibility = View.GONE
-            }
+    private fun applySearchBarVisibility() {
+        view?.findViewById<View>(R.id.search_bar)?.isVisible = Settings.showSearchBar
+    }
+
+    private fun updateList() {
+        val query = view?.findViewById<EditText>(R.id.etSearch)?.text?.toString()?.trim().orEmpty()
+        val list = (viewModel as TorrentsViewModel).getData().value.orEmpty().filter {
+            (if (category == "uncategorized") it.category.isNullOrBlank()
+            else category.isBlank() || it.category?.contains(category, true) == true) &&
+                    (query.isEmpty() || it.title.orEmpty().contains(query, true) || it.name.orEmpty().contains(query, true))
         }
+        torrentAdapter?.update(if (sortMode) list.sortedBy { it.title } else list.sortedByDescending { it.timestamp })
     }
 
     fun onKeyUp(keyCode: Int): Boolean {

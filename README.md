@@ -17,6 +17,7 @@ The new package installs separately from the original TorrServe app; settings an
 - Keeps the torrent file browser open when returning from an external player. The details button remembers whether torrent information is shown or hidden.
 - Shows the current app action, server connection, cached data, and stream connections in torrent details, distinguishing retained cache from an inactive torrent that needs buffering.
 - Uses the selected player consistently for individual files, Continue, Play All, and entries in the main Playlist page.
+- Adds an optional torrent search bar and an updated player chooser with app icons, including upstream right-to-left layout fixes.
 - Includes upstream Torznab search, Just+ and Magnet Series player integrations, subtitle matching, saved playback positions, and Magnet Series Blu-ray playback. Torznab is configured through the server web interface; saving playback positions requires a compatible server with the setting enabled.
 - Preserves additional server settings when saving from the app and includes upstream server-discovery fixes.
 - Removes the automatic donation reminder popup.
