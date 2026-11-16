@@ -12,8 +12,8 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 145
-        versionName "Flow.145.Client"
+        versionCode 146
+        versionName "Flow.146.Client"
         // Use SupportLibrary for vectors
         vectorDrawables.useSupportLibrary = true
     }
